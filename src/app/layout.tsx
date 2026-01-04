@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { GoogleAnalytics } from '@next/third-parties/google';
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import './globals.css';
 
 const geistSans = Geist({
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
 };
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID || '';
-console.log(GA_ID);
+const TAG_MANAGER_ID = process.env.NEXT_PUBLIC_TAG_MANAGER_ID || '';
 
 export default function RootLayout({
   children,
@@ -54,6 +54,7 @@ export default function RootLayout({
           <main className="flex-1">{children}</main>
           <Footer />
         </ThemeProvider>
+        {TAG_MANAGER_ID && <GoogleTagManager gtmId={TAG_MANAGER_ID} />}
         {GA_ID && <GoogleAnalytics gaId={GA_ID} />}
       </body>
     </html>
