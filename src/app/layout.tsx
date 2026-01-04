@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "YongHyun's Blog",
     description: '기술, 회고, 일상을 기록하는 개인 블로그',
-    url: 'https://blog.yonghyune.com',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://hereisian.com',
     siteName: "YongHyun's Blog",
     locale: 'ko_KR',
     type: 'website',
@@ -36,8 +36,8 @@ export const metadata: Metadata = {
   },
 };
 
-// Google Analytics ID - 실제 ID로 변경하세요
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID || '';
+console.log(GA_ID);
 
 export default function RootLayout({
   children,
