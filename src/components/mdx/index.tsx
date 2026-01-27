@@ -5,8 +5,11 @@ function extractTextFromChildren(children: ReactNode): string {
   if (typeof children === 'string') return children;
   if (typeof children === 'number') return String(children);
   if (Array.isArray(children)) return children.map(extractTextFromChildren).join('');
-  if (isValidElement(children) && children.props?.children) {
-    return extractTextFromChildren(children.props.children);
+  if (isValidElement(children)) {
+    const props = children.props as { children?: ReactNode };
+    if (props.children) {
+      return extractTextFromChildren(props.children);
+    }
   }
   return '';
 }
@@ -27,7 +30,7 @@ function findLanguage(element: ReactNode): string | null {
   }
 
   // Check children recursively
-  const children = props.children;
+  const children = props.children as ReactNode;
   if (children) {
     for (const child of Children.toArray(children)) {
       const lang = findLanguage(child);
