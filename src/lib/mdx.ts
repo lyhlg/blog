@@ -2,11 +2,18 @@ import { compileMDX } from 'next-mdx-remote/rsc';
 import rehypePrettyCode from 'rehype-pretty-code';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
+import { mdxComponents } from '@/components/mdx';
 
 const rehypePrettyCodeOptions = {
   theme: 'github-dark',
   keepBackground: true,
   defaultLang: 'plaintext',
+  filterMetaString: (meta: string) => meta,
+  onVisitLine(node: { children: unknown[] }) {
+    if (node.children.length === 0) {
+      node.children = [{ type: 'text', value: ' ' }];
+    }
+  },
 };
 
 interface MDXComponents {
@@ -26,7 +33,10 @@ export async function compileMDXContent(content: string, components?: MDXCompone
         ],
       },
     },
-    components,
+    components: {
+      ...mdxComponents,
+      ...components,
+    },
   });
 
   return compiledContent;

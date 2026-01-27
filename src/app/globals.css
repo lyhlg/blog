@@ -97,6 +97,11 @@ body {
   font-weight: 500;
 }
 
+.prose code::before,
+.prose code::after {
+  content: none;
+}
+
 .prose pre {
   background: var(--code-bg) !important;
   border-radius: 0.5rem;
@@ -109,6 +114,8 @@ body {
   padding: 0;
   font-size: 0.875rem;
   line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 /* Code block syntax highlighting */
@@ -121,12 +128,31 @@ body {
   border: 1px solid var(--border);
 }
 
-[data-rehype-pretty-code-figure] code {
+[data-rehype-pretty-code-figure] pre code {
   display: grid;
 }
 
+/* Inline code styling for rehype-pretty-code */
+[data-rehype-pretty-code-figure]:has(> code:only-child) {
+  display: inline;
+  margin: 0;
+}
+
+[data-rehype-pretty-code-figure] > code:only-child {
+  display: inline;
+  background: var(--muted);
+  padding: 0.2em 0.4em;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+[data-rehype-pretty-code-figure] > code:only-child span {
+  color: inherit !important;
+}
+
 [data-rehype-pretty-code-figure] [data-line] {
-  padding: 0 1rem;
   border-left: 2px solid transparent;
 }
 
