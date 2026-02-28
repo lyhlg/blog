@@ -6,6 +6,8 @@ import { Giscus } from '@/components/Giscus';
 import Link from 'next/link';
 import { Metadata } from 'next';
 
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://hereisian.com';
+
 interface PostPageProps {
   params: Promise<{ slug: string[] }>;
 }
@@ -26,16 +28,27 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
     return { title: 'Post Not Found' };
   }
 
+  const canonicalUrl = `${BASE_URL}/posts/${slugPath}`;
+
   return {
     title: post.title,
     description: post.description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
     openGraph: {
       title: post.title,
       description: post.description,
+      url: canonicalUrl,
       type: 'article',
       publishedTime: post.date,
       authors: ['YongHyun'],
       tags: post.tags,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.description,
     },
   };
 }
@@ -57,8 +70,26 @@ export default async function PostPage({ params }: PostPageProps) {
     day: 'numeric',
   });
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.description,
+    datePublished: post.date,
+    url: `${BASE_URL}/posts/${slugPath}`,
+    author: {
+      '@type': 'Person',
+      name: 'YongHyun',
+    },
+    keywords: post.tags.join(', '),
+  };
+
   return (
     <article className="max-w-3xl mx-auto px-4 py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Post Header */}
       <header className="mb-8">
         <div className="flex items-center gap-2 mb-4">

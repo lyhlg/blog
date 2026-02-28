@@ -1,14 +1,22 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Geist_Mono, IBM_Plex_Sans_KR, Noto_Sans_JP } from 'next/font/google';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import './globals.css';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const ibmPlexSansKR = IBM_Plex_Sans_KR({
+  variable: '--font-ibm-plex-sans-kr',
+  weight: '400',
   subsets: ['latin'],
+  display: 'swap',
+});
+
+const notoSansJP = Noto_Sans_JP({
+  variable: '--font-noto-sans-jp',
+  subsets: ['latin'],
+  display: 'swap',
 });
 
 const geistMono = Geist_Mono({
@@ -16,7 +24,10 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://hereisian.com';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(BASE_URL),
   title: {
     default: "YongHyun's Blog",
     template: "%s | YongHyun's Blog",
@@ -25,10 +36,18 @@ export const metadata: Metadata = {
   openGraph: {
     title: "YongHyun's Blog",
     description: '기술, 회고, 일상을 기록하는 개인 블로그',
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://hereisian.com',
+    url: BASE_URL,
     siteName: "YongHyun's Blog",
     locale: 'ko_KR',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "YongHyun's Blog",
+    description: '기술, 회고, 일상을 기록하는 개인 블로그',
+  },
+  alternates: {
+    canonical: BASE_URL,
   },
   robots: {
     index: true,
@@ -47,7 +66,7 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
+        className={`${ibmPlexSansKR.variable} ${notoSansJP.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
         <ThemeProvider>
           <Header />
