@@ -1,61 +1,65 @@
 ---
 title: "VS Code 마크다운 미리보기, 왜 불편했을까? — Markdown Prettier 개발기"
-description: "VS Code 마크다운 미리보기가 불편한 이유와 색상 헤딩, TOC 사이드바, 프레젠테이션 모드를 지원하는 Markdown Prettier 확장 프로그램 소개"
+description: "VS Code 마크다운 미리보기가 불편한 이유와 색상 헤딩, TOC 사이드바, 프레젠테이션 모드, 슬래시 커맨드, AI 글쓰기 개선까지 지원하는 Markdown Prettier 확장 프로그램 개발 이야기"
 date: "2026-02-28"
 category: "tech"
-tags: ["VS Code", "Markdown", "마크다운 미리보기", "VS Code Extension", "Markdown Prettier", "Cursor", "마크다운 프레젠테이션", "markdown preview"]
+tags: ["VS Code", "Markdown", "마크다운 미리보기", "VS Code Extension", "Markdown Prettier", "Cursor", "마크다운 프레젠테이션", "markdown preview", "슬래시 커맨드", "GitHub Callouts"]
 draft: false
 ---
 
-마크다운 파일을 열고 `Cmd+Shift+V`를 누릅니다.
-하얀 배경에 단색 텍스트가 쭉 나열됩니다.
+마크다운 파일을 열고 `Cmd+Shift+V`를 누르면, 하얀 배경에 단색 텍스트가 쭉 나열돼요.
 
-개발자라면 익숙할 수 있습니다.
-하지만 요즘은 PO, PD, 기획자도 `.md` 파일을 봅니다.
+개발자한테는 익숙할 수 있는데요.
+요즘은 PO, PD, 기획자분들도 `.md` 파일을 직접 보는 경우가 많아요.
 모노레포의 README, ADR, RFC 문서를 함께 읽어야 하니까요.
 
-**익숙하지 않은 분들에게 기본 마크다운 미리보기는 읽기 어렵습니다.**
+**익숙하지 않은 분들에게 기본 마크다운 미리보기는 솔직히 읽기 어렵습니다.**
 
-그래서 직접 만들었습니다. **Markdown Prettier**.
+그래서 직접 만들게 됐어요. **Markdown Prettier** — VS Code가 원래 갖고 있었어야 할 마크다운 프리뷰어입니다.
 
 ---
 
 ## TLDR
 
-> - VS Code 기본 마크다운 미리보기는 가독성, 네비게이션, 발표 기능이 부족합니다
-> - Markdown Prettier는 색상 헤딩, TOC 사이드바, 프레젠테이션 모드 등을 지원합니다
+> - VS Code 기본 마크다운 미리보기는 가독성, 네비게이션, 발표 기능이 부족해요
+> - Markdown Prettier는 색상 헤딩, TOC 사이드바, 프레젠테이션 모드, 20+ 슬래시 커맨드, AI 글쓰기 개선까지 지원해요
 > - 기존 확장 프로그램(MPE, Markdown All in One)과의 차별점을 비교합니다
 
 ---
 
 ## 기존 마크다운 뷰어의 불편함들
 
-VS Code의 기본 마크다운 미리보기를 써보면 몇 가지 불편함이 있습니다.
+VS Code의 기본 마크다운 미리보기를 써보면, 의외로 불편한 점이 꽤 많아요.
 
-**1. 헤딩 구분이 안 됩니다**
+### 1. 헤딩 구분이 안 돼요
 
-H1과 H3의 차이가 글씨 크기뿐입니다.
-문서가 길어지면 어떤 레벨의 제목인지 한눈에 파악하기 어렵습니다.
+H1과 H3의 차이가 글씨 크기뿐이에요.
+문서가 길어지면 지금 읽고 있는 제목이 몇 레벨인지 한눈에 파악하기가 어렵습니다.
 
-**2. 목차(TOC)가 없습니다**
+### 2. 목차(TOC)가 없어요
 
-긴 문서에서 원하는 섹션으로 이동하려면 스크롤을 해야 합니다.
-어디에 뭐가 있는지 전체 구조를 파악하기 힘듭니다.
+긴 문서에서 원하는 섹션으로 이동하려면 끝없이 스크롤해야 해요.
+"아까 그 섹션 어디였지?" 하면서 위아래로 왔다 갔다 하게 되는데요, 이게 은근히 시간을 잡아먹어요.
 
-**3. 프레젠테이션이 안 됩니다**
+### 3. 프레젠테이션이 안 돼요
 
-마크다운으로 작성한 문서를 팀에 공유할 때, 미리보기 화면을 그대로 보여주기엔 밋밋합니다.
-별도의 슬라이드 도구로 옮겨야 하는 번거로움이 있습니다.
+마크다운으로 작성한 문서를 팀에 공유할 때, 미리보기 화면을 그대로 보여주기엔 좀 밋밋해요.
+결국 별도의 슬라이드 도구로 옮기게 되는데, 이 과정이 번거롭습니다.
 
-**4. Mermaid 다이어그램을 지원하지 않습니다**
+### 4. Mermaid 다이어그램을 지원하지 않아요
 
-기본 미리보기에서는 Mermaid 코드가 그냥 텍스트로 출력됩니다.
-별도 확장을 설치해야 합니다.
+기본 미리보기에서는 Mermaid 코드가 그냥 텍스트로 출력돼요.
+별도 확장을 설치해야 하는데, 다이어그램 하나 보려고 확장을 또 깔아야 한다니 좀 귀찮죠.
 
-**5. 폰트 크기를 조절할 수 없습니다**
+### 5. GitHub Callout을 지원하지 않아요
 
-발표나 화면 공유 시 글씨가 작다고 느껴도 조절 방법이 없습니다.
-VS Code 전체 줌을 해야 합니다.
+GitHub에서는 `[!NOTE]`, `[!WARNING]` 같은 callout 블록이 예쁘게 렌더링되는데요.
+VS Code 기본 미리보기에서는 그냥 텍스트로 나와요. GitHub에서 잘 보이던 문서가 로컬에서는 의도대로 안 보이는 거예요.
+
+### 6. 폰트 크기를 조절할 수 없어요
+
+발표나 화면 공유 시 글씨가 작다고 느껴도 미리보기만 따로 키울 방법이 없어요.
+VS Code 전체를 줌 해야 하는데, 그러면 에디터까지 다 커져버립니다.
 
 그렇다면 기존 확장 프로그램으로는 해결이 될까요?
 
@@ -63,22 +67,26 @@ VS Code 전체 줌을 해야 합니다.
 
 ## 기능 비교: 기존 뷰어 vs Markdown Prettier
 
-| 기능 | VS Code 기본 | Markdown Preview Enhanced | Markdown All in One | **Markdown Prettier** |
+| 기능 | VS Code 기본 | MPE | All in One | **Markdown Prettier** |
 |------|:---:|:---:|:---:|:---:|
-| **헤딩 색상 구분** | ❌ 단색 | ❌ 단색 | ❌ 단색 | ✅ 레벨별 5색 |
-| **TOC 사이드바** | ❌ 없음 | ❌ 본문 내 삽입 | ❌ 본문 내 삽입 | ✅ 좌측 사이드바 + 활성 섹션 하이라이트 |
-| **프레젠테이션 모드** | ❌ | ✅ reveal.js 기반 | ❌ | ✅ 내장 (`---` 구분자) |
+| **헤딩 색상 구분** | ❌ 단색 | ❌ 단색 | ❌ 단색 | ✅ H1~H6 레벨별 5색 |
+| **TOC 사이드바** | ❌ 없음 | ❌ 본문 내 삽입 | ❌ 본문 내 삽입 | ✅ 좌측 사이드바 + 검색 + 리사이즈 |
+| **프레젠테이션 모드** | ❌ | ✅ reveal.js | ❌ | ✅ 내장 (`---` 구분자) |
 | **코드 하이라이팅** | 기본 | ✅ highlight.js | ❌ | ✅ Atom One Dark 테마 |
 | **Mermaid 다이어그램** | ❌ 확장 필요 | ✅ 내장 | ❌ | ✅ 내장 + 테마 자동 전환 |
-| **스크롤 동기화** | 불안정 | ✅ 안정적 | ❌ | ✅ 헤딩 기반 |
+| **GitHub Callouts** | ❌ | ❌ | ❌ | ✅ NOTE/TIP/WARNING/CAUTION |
+| **슬래시 커맨드** | ❌ | ❌ | 일부 | ✅ 20개+ 리치 자동완성 |
+| **양방향 스크롤 동기화** | 불안정 | ✅ | ❌ | ✅ 에디터 ↔ 프리뷰 |
 | **폰트 크기 조절** | ❌ | ❌ | ❌ | ✅ A+/A- (10~20px) |
-| **라이브 편집** | ❌ | ❌ | ❌ | ✅ 더블 클릭으로 즉시 편집 |
-| **Frontmatter 처리** | 그대로 노출 | ✅ 파싱/숨김 | ❌ | ✅ 자동 숨김 |
+| **라이브 편집** | ❌ | ❌ | ❌ | ✅ 더블 클릭 즉시 편집 |
+| **AI 글쓰기 개선** | ❌ | ❌ | ❌ | ✅ Ask Claude |
+| **Frontmatter 처리** | 그대로 노출 | ✅ 파싱 | ❌ | ✅ 자동 숨김 |
 | **Light/Dark 모드** | VS Code 종속 | 커스텀 | VS Code 종속 | ✅ 자동 전환 |
-| **PDF 내보내기** | ❌ | ✅ Pandoc 기반 | ❌ | ✅ 내장 |
+| **PDF 내보내기** | ❌ | ✅ Pandoc | ❌ | ✅ 내장 (헤드리스 Chrome) |
+| **리치 텍스트** | 기본 | 기본 | 기본 | ✅ 하이라이트, mark, 체크박스 |
 
-Markdown Preview Enhanced(MPE)가 가장 많은 기능을 가지고 있지만,
-**헤딩 색상 구분, TOC 사이드바, 폰트 크기 조절**은 Markdown Prettier만의 기능입니다.
+Markdown Preview Enhanced(MPE)가 전통적으로 가장 많은 기능을 가지고 있지만,
+**헤딩 색상 구분, TOC 사이드바(검색/리사이즈), 폰트 크기 조절, 슬래시 커맨드, AI 글쓰기 개선**은 Markdown Prettier만의 기능이에요.
 
 ---
 
@@ -86,7 +94,7 @@ Markdown Preview Enhanced(MPE)가 가장 많은 기능을 가지고 있지만,
 
 ### 색상 헤딩 (Colored Headings)
 
-각 헤딩 레벨에 고유한 색상을 부여했습니다.
+각 헤딩 레벨에 고유한 색상을 부여했어요.
 
 - **H1** — Blue (`#61AFEF`) + 하단 보더
 - **H2** — Green (`#98C379`) + 하단 보더
@@ -94,69 +102,177 @@ Markdown Preview Enhanced(MPE)가 가장 많은 기능을 가지고 있지만,
 - **H4** — Purple (`#C678DD`)
 - **H5/H6** — Gray (`#ABB2BF`)
 
-문서를 훑어보는 것만으로 구조를 파악할 수 있습니다.
-특히 긴 기술 문서에서 "지금 어디를 읽고 있는지" 직관적으로 알 수 있습니다.
+문서를 스크롤만 해도 구조가 눈에 들어와요.
+특히 긴 기술 문서에서 "지금 내가 어디를 읽고 있지?" 하는 순간이 확 줄어듭니다.
 
 ### TOC 사이드바
 
 ![Markdown Prettier 전체 화면 - 색상 헤딩, TOC 사이드바, 폰트 조절, PDF 내보내기](/images/posts/vscode-markdown-prettier/full-preview.png)
 
-좌측에 자동 생성되는 목차 사이드바입니다.
+좌측에 자동 생성되는 목차 사이드바인데요, 단순한 목차 이상의 기능을 제공해요.
 
-- 클릭하면 해당 섹션으로 **smooth-scroll** 이동
-- 현재 읽고 있는 섹션이 **자동 하이라이트**
+- **클릭하면** 해당 섹션으로 smooth-scroll 이동
+- **현재 읽고 있는 섹션**이 자동으로 하이라이트
+- **검색** 기능으로 헤딩을 바로 필터링
+- **드래그 리사이즈** — 사이드바 폭을 120px~500px 사이에서 자유롭게 조절
 - 접기/펼치기 토글 지원
-- 동일 이름의 헤딩도 구분 가능
+- ATX(`#`) 방식과 Setext 방식 헤딩 모두 인식
 
-기존 확장들은 TOC를 본문 안에 삽입하는 방식입니다.
-사이드바로 분리하면 본문을 읽으면서도 항상 전체 구조를 볼 수 있습니다.
+기존 확장들은 TOC를 본문 안에 삽입하는 방식이에요.
+사이드바로 분리하면 본문을 읽으면서도 항상 전체 구조를 한눈에 볼 수 있어서 훨씬 편해요.
 
 ![TOC 사이드바 - 현재 읽고 있는 섹션이 하이라이트됩니다](/images/posts/vscode-markdown-prettier/toc-sidebar.png)
 
 ### 프레젠테이션 모드
 
-마크다운 문서를 바로 슬라이드로 전환합니다.
+마크다운 문서를 바로 슬라이드로 전환할 수 있어요.
 
 - `---` (수평선)을 슬라이드 구분자로 사용
 - 상단 ▶ 버튼으로 진입
-- `←` `→` 방향키로 이동
+- `←` `→` 방향키, `Space` 키로 이동
+- `Home` / `End`로 처음/마지막 슬라이드 이동
 - `ESC`로 종료
 - 슬라이드 카운터 표시 (예: `3 / 12`)
+- 부드러운 슬라이딩 트랜지션 효과
 
-별도의 도구 없이 마크다운 문서를 그대로 발표에 사용할 수 있습니다.
+별도의 도구 없이 마크다운 문서를 그대로 발표에 사용할 수 있어요.
+회의 중에 README를 급하게 공유해야 할 때 특히 유용합니다.
 
 ### 폰트 크기 컨트롤
 
-우측 상단의 `A-` / `A+` 버튼으로 폰트 크기를 조절합니다.
+우측 상단의 `A-` / `A+` 버튼으로 폰트 크기를 조절해요.
 
 - 기본 12px, 범위 10~20px
-- 설정이 세션 간 유지
-- 화면 공유나 발표 시 유용
+- 설정이 세션 간 유지돼요
+- 모든 콘텐츠가 비례적으로 스케일링
 
-VS Code 전체 줌 없이 미리보기만 크기를 바꿀 수 있습니다.
+VS Code 전체 줌 없이 미리보기만 크기를 바꿀 수 있어서, 화면 공유나 발표 시에 딱 좋아요.
+
+<video src="https://raw.githubusercontent.com/lyhlg/vscode-markdown-prettier-plugin/main/assets/videos/font.mov" controls muted loop width="100%" />
+
 
 ---
 
+### GitHub-style Callouts
+
+GitHub에서 사용하는 callout 문법을 그대로 지원해요.
+
+`[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]` — 각각 고유한 아이콘과 색상으로 렌더링됩니다.
+
+![NOTE callout - 정보를 강조할 때 사용](/images/posts/vscode-markdown-prettier/callout-note.png)
+
+![WARNING callout - 주의가 필요한 내용을 표시](/images/posts/vscode-markdown-prettier/callout-warning.png)
+
+GitHub에서 작성한 문서를 로컬에서 미리볼 때, 의도한 대로 callout이 표시되니까 문서 작성할 때 훨씬 편해요.
+
 ### Mermaid 다이어그램
 
-Mermaid 코드 블록을 작성하면 미리보기에서 바로 다이어그램으로 렌더링됩니다.
+Mermaid 코드 블록을 작성하면 미리보기에서 바로 다이어그램으로 렌더링돼요.
 
-![Mermaid 다이어그램 렌더링 - 기술 스택 흐름도](/images/posts/vscode-markdown-prettier/mermaid-diagram.png)
+지원하는 다이어그램 종류도 다양해요:
 
-Light/Dark 테마에 맞춰 다이어그램 스타일이 자동 전환됩니다.
-별도의 다이어그램 확장을 설치할 필요가 없습니다.
+**Flowchart** — 프로세스 흐름을 시각화
 
-### 라이브 편집
+![Mermaid Flowchart - 요청 처리 흐름도](/images/posts/vscode-markdown-prettier/mermaid-flowchart.png)
 
-미리보기 화면에서 텍스트를 **더블 클릭**하면 바로 편집 모드로 진입합니다.
+**Sequence Diagram** — 서비스 간 통신 흐름
 
-![라이브 편집 - 미리보기에서 바로 수정 가능](/images/posts/vscode-markdown-prettier/live-edit.png)
+![Mermaid Sequence - API 인증 시퀀스 다이어그램](/images/posts/vscode-markdown-prettier/mermaid-sequence.png)
 
-- 마크다운 파일을 왔다 갔다 할 필요가 없습니다
-- `Ctrl+Enter`로 저장, `ESC`로 취소
-- 수정하면 원본 `.md` 파일에 바로 반영됩니다
+**Class Diagram** — 클래스 구조와 관계
 
-문서를 읽다가 오타나 수정사항을 발견하면, 그 자리에서 바로 고칠 수 있습니다.
+![Mermaid Class - 라우터 클래스 다이어그램](/images/posts/vscode-markdown-prettier/mermaid-class.png)
+
+이 외에도 State, ER, Gantt, Pie 차트, Git graph까지 지원해요.
+Light/Dark 테마에 맞춰 다이어그램 스타일이 자동 전환되고요, 별도의 다이어그램 확장을 설치할 필요가 없습니다.
+
+### 코드 신택스 하이라이팅
+
+highlight.js 기반의 Atom One Dark 테마로 코드 블록이 렌더링돼요.
+TypeScript, Python, Go, Rust, Dockerfile, SQL 등 대부분의 언어를 지원합니다.
+
+![코드 하이라이팅 - JavaScript/TypeScript 예시](/images/posts/vscode-markdown-prettier/codeblock-javascript.png)
+
+### 리치 텍스트 포매팅
+
+마크다운의 모든 서식 요소가 가독성에 맞춰 세심하게 스타일링돼 있어요.
+
+- **Bold**는 미묘한 배경 하이라이트와 함께 표시
+- `==강조 텍스트==` — 그라디언트 마커 효과로 형광펜처럼 표현
+- 테이블은 줄 번갈아 배경색 적용
+- Task 리스트는 실제 체크박스로 렌더링
+- 이미지는 반응형 사이즈 조절
+- YAML Frontmatter는 자동으로 숨김 처리
+
+![테이블 렌더링 - 줄 번갈아 배경색과 정렬 지원](/images/posts/vscode-markdown-prettier/table.png)
+
+---
+
+## 편의 기능
+
+### 양방향 스크롤 동기화
+
+에디터에서 스크롤하면 미리보기가 따라오고, 미리보기에서 스크롤하면 에디터가 따라와요.
+
+피드백 루프 방지 처리가 되어 있어서, 양방향으로 동기화해도 글리치 없이 부드럽게 동작해요.
+나란히 놓고 쓸 때도, 전체 화면으로 볼 때도 모두 잘 동작합니다.
+
+### 라이브 프리뷰
+
+키 입력 하나하나가 실시간으로 미리보기에 반영돼요.
+마크다운 파일을 전환하면 미리보기도 자동으로 따라서 바뀌고요.
+
+별도로 새로고침하거나 다시 열 필요 없이, 그냥 타이핑하면 됩니다.
+
+<video src="https://raw.githubusercontent.com/lyhlg/vscode-markdown-prettier-plugin/main/assets/videos/preview.mov" controls muted loop width="100%" />
+
+
+### 인라인 편집 & Ask Claude
+
+미리보기 화면을 떠나지 않고도 문서를 수정할 수 있어요.
+
+![인라인 편집 - 미리보기에서 바로 수정 가능](/images/posts/vscode-markdown-prettier/live-edit.png)
+
+- **더블 클릭**하면 해당 블록이 편집 모드로 전환 (`Ctrl+Enter`로 저장, `ESC`로 취소)
+- **✎ 버튼**을 클릭하면 전체 문서 편집 모드로 진입 (`Ctrl+S`로 저장)
+- **Ask Claude** — 텍스트를 선택하고 플로팅 툴바의 AI 버튼을 클릭하면, Claude가 문장을 다듬어줘요
+
+문서를 읽다가 오타나 어색한 문장을 발견하면, 그 자리에서 바로 고치거나 AI에게 개선을 요청할 수 있어요.
+
+<video src="https://raw.githubusercontent.com/lyhlg/vscode-markdown-prettier-plugin/main/assets/videos/preview-modify.mov" controls muted loop width="100%" />
+
+### PDF 내보내기
+
+마크다운 문서를 PDF로 한 번에 내보낼 수 있어요.
+
+헤드리스 Chrome/Chromium/Edge/Brave를 사용해서 내보내기 때문에, 모든 스타일링이 그대로 유지돼요.
+Mermaid 다이어그램, callout 블록, 코드 하이라이팅까지 전부 포함되고, 페이지 브레이크도 똑똑하게 처리됩니다.
+
+---
+
+## 슬래시 커맨드
+
+이 기능은 따로 소개하고 싶을 만큼 편리한데요.
+마크다운 파일에서 `/`를 입력하면 **20개 이상의 스니펫 커맨드**가 리치 자동완성으로 뜹니다.
+
+| 커맨드 | 설명 |
+|---------|------|
+| `/h1` `/h2` `/h3` `/h4` | 헤딩 삽입 |
+| `/codeblock` | 언어 선택 가능한 코드 블록 (JS, TS, Python, Bash, JSON, Go, Rust 등 13개) |
+| `/table` | 마크다운 테이블 템플릿 |
+| `/mermaid` | 다이어그램 타입 선택 가능한 Mermaid 블록 |
+| `/mermaid-flowchart` `/mermaid-sequence` `/mermaid-class` | 특정 다이어그램 템플릿 |
+| `/note` `/tip` `/important` `/warning` `/caution` | GitHub-style callout 블록 |
+| `/image` `/link` | 미디어 요소 |
+| `/checkbox` | 태스크 리스트 |
+| `/bold` `/italic` `/highlight` `/strikethrough` | 텍스트 포매팅 |
+| `/blockquote` `/hr` | 블록 요소 |
+
+자동완성 팝업에 **렌더링된 미리보기**와 **Mermaid 다이어그램 미리보기**까지 바로 보여주기 때문에,
+어떤 결과물이 나올지 삽입 전에 확인할 수 있어요. 마크다운 문법을 잘 모르는 분들도 편하게 작성할 수 있습니다.
+
+<video src="https://raw.githubusercontent.com/lyhlg/vscode-markdown-prettier-plugin/main/assets/videos/slash.mov" controls muted loop width="100%" />
+
 
 ---
 
@@ -165,9 +281,10 @@ Light/Dark 테마에 맞춰 다이어그램 스타일이 자동 전환됩니다.
 - **markdown-it**: 마크다운 파싱
 - **highlight.js**: 코드 신택스 하이라이팅 (Atom One Dark 테마)
 - **mermaid.js**: 다이어그램 렌더링
+- **markdown-it-mark**: `==강조==` 문법 지원
 
-VS Code의 Webview API를 사용하여 커스텀 HTML 미리보기를 구현했습니다.
-기본 마크다운 미리보기를 교체하는 것이 아니라, 별도의 뷰어로 동작합니다.
+VS Code의 Webview API를 사용하여 커스텀 HTML 미리보기를 구현했어요.
+기본 마크다운 미리보기를 교체하는 게 아니라 별도의 뷰어로 동작하기 때문에, 기존 환경에 영향을 주지 않아요.
 
 ---
 
@@ -175,7 +292,7 @@ VS Code의 Webview API를 사용하여 커스텀 HTML 미리보기를 구현했�
 
 ### 설치
 
-VS Code 또는 Cursor의 확장 프로그램 탭에서 **"Markdown Prettier"**를 검색하면 바로 설치할 수 있습니다.
+VS Code 또는 Cursor의 확장 프로그램 탭에서 **"Markdown Prettier"**를 검색하면 바로 설치할 수 있어요.
 
 - **VS Code**: [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=lyhlg.markdown-prettier)
 - **Cursor / 기타 에디터**: [Open VSX Registry](https://open-vsx.org/extension/lyhlg/markdown-prettier)
@@ -187,27 +304,38 @@ VS Code 또는 Cursor의 확장 프로그램 탭에서 **"Markdown Prettier"**�
 - `Cmd + Shift + M` (macOS) / `Ctrl + Shift + M` (Windows/Linux)
 - 또는 에디터 상단의 **MD 아이콘** 클릭
 
+### 단축키 정리
+
 | 단축키 | 동작 |
 |--------|------|
-| `Cmd + Shift + M` | 미리보기 열기 |
-| `▶` 버튼 | 프레젠테이션 모드 |
-| `←` / `→` | 슬라이드 이동 |
+| `Cmd/Ctrl + Shift + M` | 미리보기 열기 |
+| `▶` 버튼 | 프레젠테이션 모드 진입 |
+| `←` / `→` / `Space` | 슬라이드 이동 |
+| `Home` / `End` | 처음/마지막 슬라이드 |
 | `ESC` | 프레젠테이션 종료 |
 | `A-` / `A+` | 폰트 크기 조절 |
+| 더블 클릭 | 인라인 편집 |
+| `Ctrl+Enter` | 인라인 편집 저장 |
+| `/` | 슬래시 커맨드 |
 
 ---
 
 ## 정리
 
-1. ✅ **가독성 개선** — 헤딩 색상 구분으로 문서 구조를 한눈에 파악
-2. ✅ **네비게이션** — TOC 사이드바로 긴 문서도 빠르게 탐색
-3. ✅ **발표 지원** — 프레젠테이션 모드로 별도 도구 없이 발표
-4. ✅ **세밀한 조절** — 폰트 크기, 테마 자동 전환, Frontmatter 숨김
+| | 해결한 문제 |
+|---|---|
+| ✅ **가독성** | 헤딩 색상 구분 + 리치 텍스트로 문서 구조를 한눈에 파악 |
+| ✅ **네비게이션** | 검색 가능한 TOC 사이드바로 긴 문서도 빠르게 탐색 |
+| ✅ **발표** | 프레젠테이션 모드로 별도 도구 없이 바로 발표 |
+| ✅ **작성 편의** | 20+ 슬래시 커맨드와 리치 자동완성으로 빠르게 작성 |
+| ✅ **교정** | AI(Ask Claude)로 문장 다듬기까지 에디터 안에서 해결 |
+| ✅ **세밀한 조절** | 폰트 크기, 테마 자동 전환, Frontmatter 숨김, PDF 내보내기 |
 
-개발자만 보는 문서가 아닙니다.
-PO, PD, 기획자도 함께 읽는 문서입니다.
+개발자만 보는 문서가 아니에요.
+PO, PD, 기획자도 함께 읽는 문서예요.
 
-**읽기 좋은 문서가 좋은 협업의 시작**이라고 생각합니다.
+**읽기 좋은 문서가 좋은 협업의 시작**이라고 생각해요.
+그래서 "그냥 읽히는" 마크다운 미리보기를 만들고 싶었습니다.
 
 ---
 
@@ -220,4 +348,5 @@ PO, PD, 기획자도 함께 읽는 문서입니다.
 
 ---
 
-마크다운 미리보기가 불편하셨다면, 한번 사용해보세요.
+마크다운 미리보기가 불편하셨다면, 한번 써보세요.
+피드백은 언제든 환영합니다!

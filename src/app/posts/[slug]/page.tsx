@@ -113,7 +113,27 @@ export default async function PostPage({ params }: PostPageProps) {
             ← 목록으로 돌아가기
           </Link>
         </div>
-        
+
+        {/* Buy Me a Coffee */}
+        <div className="flex flex-col items-center gap-3 py-6 mb-8 rounded-lg bg-muted/50">
+          <p className="text-sm text-muted-foreground">
+            이 글이 도움이 되셨다면 커피 한 잔 사주세요 ☕
+          </p>
+          <a
+            href="https://buymeacoffee.com/lyhlg"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
+              alt="Buy Me A Coffee"
+              height="40"
+              width="145"
+              className="h-10 w-auto"
+            />
+          </a>
+        </div>
+
         {/* Comments */}
         {/* <Giscus /> */}
       </footer>
