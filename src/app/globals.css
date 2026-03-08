@@ -66,6 +66,9 @@ body {
   --tw-prose-code: var(--foreground);
   --tw-prose-pre-bg: var(--code-bg);
   --tw-prose-bold: var(--foreground);
+  --tw-prose-quotes: var(--foreground);
+  --tw-prose-counters: var(--muted-foreground);
+  --tw-prose-bullets: var(--muted-foreground);
 }
 
 .prose h1,
